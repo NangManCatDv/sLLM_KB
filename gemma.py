@@ -65,16 +65,16 @@ def generate_response(user_input: str, session_id: str):
 
 
 def chat():
-    print("メガミ: hello!")
+    print('AI비서(종료는 "종료", "exit", "quit"를 입력): 안녕하세요!')
     session_id = "unique_session_id"
     while True:
         user_input = input("You: ")
         if user_input.lower() in ["종료", "exit", "quit"]:
-            print("メガミ: 안녕히 가세요!")
+            print("AI비서: 안녕히 가세요!")
             break
 
         response = generate_response(user_input, session_id)
-        print(f"メガミ: {response}")
+        print(f"AI비서: {response}")
 
 
 if __name__ == "__main__":
