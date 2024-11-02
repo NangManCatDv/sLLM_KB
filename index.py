@@ -3,15 +3,8 @@ from pyswip import Prolog
 # Prolog 인스턴스 생성
 prolog = Prolog()
 
-# Prolog에 기본 사실과 규칙 추가
-prolog.assertz("parent(john, mary)")
-prolog.assertz("parent(john, sam)")
-prolog.assertz("parent(mary, anna)")
-prolog.assertz("parent(sam, tom)")
-
-# 가족 관계 규칙 정의
-prolog.assertz("sibling(X, Y) :- parent(Z, X), parent(Z, Y), X \= Y")
-prolog.assertz("grandparent(X, Y) :- parent(X, Z), parent(Z, Y)")
+# Prolog 규칙 파일 로드
+prolog.consult("rules.pl")
 
 
 # Prolog와의 상호작용 함수
@@ -30,17 +23,14 @@ def process_question(question):
     question = question.lower()
 
     if "siblings" in question:
-        # 형제 관계 질문 처리
         person = question.split(" ")[-1].strip("?")
         return f"sibling(X, {person})"
 
     elif "grandparent" in question:
-        # 조부모 관계 질문 처리
         person = question.split(" ")[-1].strip("?")
         return f"grandparent(X, {person})"
 
     elif "parent" in question:
-        # 부모 관계 질문 처리
         person = question.split(" ")[-1].strip("?")
         return f"parent(X, {person})"
 
