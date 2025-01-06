@@ -25,8 +25,8 @@ from pyswip import Prolog
 # Note: doc/doc2.pdf 파일을 읽고 그것을 prolog 언어로 바꾸고,
 # Note: 바꾸어진 Prolog 언어는 process_prolog_code 함수를 통해 후처리 되어 적합한 Prolog언어로 바뀌어,
 # Note: prolog/output.pl로 저장되는 코드입니다.
+# Info: 이 코드는 test.py에서 merge 부분을 주석처리하고 rule.txt파일을 사전학습에서 배제시킨 코드이다.
 
-# BUG: merge시 오히려 RAG 효과가 떨어지는 문제가 발생
 # BUG: OCR된 결과를 Gemma가 제대로 처리하지 못하는 문제가 발생
 
 # Fixme: 이미지 기반 PDF를 읽히는 대신(OCR), 텍스트 기반 파일을 읽히는 것으로 변경
@@ -40,11 +40,13 @@ def process_prolog_code(prolog_code):
         if not line:
             continue  # 빈 줄은 건너뛰기
 
-        # 문자열과 특수문자 처리
-        line = re.sub(r"([\w가-힣]+)", r"'\1'", line)  # 문자열을 작은따옴표로 감싸기
-        line = re.sub(r"\s*,\s*", ",", line)  # 콤마 양쪽 공백 제거
+        # 문자열 감싸기 (숫자는 제외)
+        line = re.sub(r"(?<!')([\uAC00-\uD7A3\w]+)(?!')", r"'\1'", line)
 
-        # 문장 끝에 . 추가 (이미 있다면 중복 방지)
+        # 콤마 양쪽 공백 제거
+        line = re.sub(r"\s*,\s*", ",", line)
+
+        # 문장 끝에 . 추가
         if not line.endswith("."):
             line += "."
 
@@ -71,19 +73,42 @@ def extract_text_from_pdf(pdf_path):
     return full_text
 
 
-# PDF 로드 및 텍스트 추출
+# # TXT 파일 읽기
+# def read_text_file(txt_path):
+#     if not os.path.exists(txt_path):
+#         raise FileNotFoundError(f"TXT 파일 {txt_path}을 찾을 수 없습니다.")
+#     with open(txt_path, "r", encoding="utf-8") as file:
+#         return file.read()
+
+
+# 파일 읽기
 pdf_path = "doc/doc2.pdf"
+txt_path = "rule/rule.txt"
+
 if not os.path.exists(pdf_path):
     raise FileNotFoundError(f"PDF 파일 {pdf_path}을 찾을 수 없습니다.")
 
+# if not os.path.exists(txt_path):
+#     raise FileNotFoundError(f"TXT 파일 {txt_path}을 찾을 수 없습니다.")
+
+# PDF와 TXT 읽기
 extracted_text = extract_text_from_pdf(pdf_path)
+# rule_text = read_text_file(txt_path)
+
+# 텍스트 병합
+merged_text = extracted_text
+# merged_text = extracted_text + "\n" + rule_text
 
 # 텍스트 분리
 text_splitter = RecursiveCharacterTextSplitter(
     chunk_size=500,
     chunk_overlap=50,
 )
-docs = text_splitter.create_documents([extracted_text])
+docs = text_splitter.create_documents([merged_text])
+
+# 디버그 로그로 청크 확인
+for i, doc in enumerate(docs):
+    print(f"Chunk {i+1}:\n{doc.page_content}\n{'-'*40}")
 
 # 임베딩 생성
 embeddings = HuggingFaceEmbeddings(
@@ -113,16 +138,17 @@ retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
 
 # Prompt 템플릿
 template = """
-You are an AI assistant that specializes in converting text from documents into Prolog statements. Analyze the context carefully and convert it into accurate Prolog code. Ensure that numerical values or descriptive text are directly taken from the context without assumptions. Do not include explanations or emphasis, and only return plain Prolog statements.
+You are an AI assistant that specializes in converting health examination results into Prolog facts based on predefined rules. Utilize the provided rules from the file `rule.txt` to generate accurate Prolog facts. Ensure that the numerical values and descriptive text are faithfully represented from the health examination results, aligning them with the rules in `rule.txt`. If specific numerical values are not provided, represent them as `unknown` in the Prolog facts. Avoid assumptions or inferences, and focus strictly on creating valid Prolog facts. The output should contain only Prolog facts and no additional explanation or markdown formatting.
 
 Context:
 {context}
 
 Instruction:
-Convert the above context into Prolog statements, ensuring accurate representation without adding inferred data.
+Convert the above context into Prolog statements, ensuring accurate representation without adding inferred data. Translate all non-numerical labels or terms into English.
 
 Prolog Code:
 """
+
 
 prompt = ChatPromptTemplate.from_template(template)
 
@@ -143,9 +169,6 @@ rag_chain = (
 # 질문 처리
 query = "내 건강검진결과서를 prolog어로 바꿔줘"
 answer = rag_chain.invoke(query)
-
-# print("Query:", query)
-# print("Answer:", answer)
 
 # Prolog 코드 후처리
 formatted_answer = process_prolog_code(answer)
