@@ -30,13 +30,17 @@
 ## 🎯 다음 단계
 1. **`run.py`**와 관련 스크립트의 테스트 케이스 확장.
 2. `ReadMe.md` 파일에 **`run.py` 사용법**과 주요 기능 설명 추가.
-3. requirements.txt로 의존성 명시
+3. `requirements.txt`로 의존성 명시.
+
+---
+
+## 📽️ 구동 영상
+프로젝트의 실행 및 주요 기능을 확인하려면 아래의 YouTube 영상을 참고하세요:
+[![YouTube 구동 영상](https://img.youtube.com/vi/sl6UYa5MhHA/0.jpg)](https://youtu.be/sl6UYa5MhHA?si=3BhPHzA2u0EhexMp)
+- **링크:** [YouTube 구동 영상](https://youtu.be/sl6UYa5MhHA?si=3BhPHzA2u0EhexMp)
 
 ---
 
 ## 📌 유지 관리자
 - **NangManCatDev**  
 - **저장소:** [Prolog_llm](https://github.com/NangManCatDev/Prolog_llm)
-
----
-
