@@ -13,6 +13,7 @@
   - 🛠️ **`query_to_prolog.py`**: 자연어 쿼리를 Prolog 형식으로 변환.
   - 💾 **`vectorstore.py`**: 데이터 저장 및 관리.
   - 🔄 **`vectorstore_to_prolog.py`**: 벡터 데이터를 Prolog 쿼리 형식으로 변환.
+  - 🔄 **`vectorstore_to_NEO.py`**: 벡터 데이터를 NEO 쿼리 형식으로 변환.
 
 ---
 
@@ -20,6 +21,7 @@
 - **코드 구현**:
   - `run.py`를 중심으로 Prolog-LLM 통합을 위한 주요 기능 구현 완료.
   - Prolog 쿼리 실행 및 결과 반환 기능 정상 동작.
+  - NEO Knowledge Base 로도 변경(기존 Prolog KB를 NEO에서도 활용할 수 있는 데이터 구조 및 구현 방식 설계 및 구현) -> 현재 구현중
 - **데이터 관리**:
   - 벡터 저장소와 Prolog 간의 데이터 변환 및 통합 완료.
 
@@ -28,6 +30,7 @@
 ## 🎯 다음 단계
 1. **`run.py`**와 관련 스크립트의 테스트 케이스 확장.
 2. `ReadMe.md` 파일에 **`run.py` 사용법**과 주요 기능 설명 추가.
+3. requirements.txt로 의존성 명시
 
 ---
 

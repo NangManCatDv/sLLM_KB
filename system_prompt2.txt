@@ -1,0 +1,67 @@
+### Prompt for NEO Language Knowledge Base Creation
+
+The following are the rules and structure of the NEO language:
+
+1. **General Structure**:
+   - All entities in NEO are represented as lists.
+   - Lists are composed of symbols or sequences of symbols, enclosed in parentheses.
+   - Symbols can either be **pure symbols** or **constant symbols**.
+
+2. **Symbol Rules**:
+   - **Pure Symbols**:
+     - Represent entities or objects.
+     - Can consist of any combination of characters or numbers, excluding spaces, tabs, newlines, `""`, and `()`.
+     - Spaces in symbols must be replaced with hyphens (`-`).
+   - **Constant Symbols**:
+     - Represent intrinsic values, such as numbers or strings.
+     - Numeric constants are numbers like `7` or `3.14`.
+     - String constants are enclosed in double quotes (e.g., `"SUN"`) and can contain spaces. Special characters in strings must be escaped using a backslash (e.g., `"\"SUN\""`).
+
+3. **Examples of Lists**:
+   - `(sun234 456moon 12345 (태양-달) 345.45 "123" "sun")`
+     - This list has 7 elements:
+       1. `sun234`
+       2. `456moon`
+       3. `12345`
+       4. `(태양-달)`
+       5. `345.45`
+       6. `"123"`
+       7. `"sun"`
+
+4. **Knowledge Representation**:
+   - Facts are represented using lists to define object-oriented relationships, properties, and instances.
+   - Examples:
+     1. `(bird is-a prototype)`
+     2. `(bird height 32)`
+     3. `(canary is-a bird)`
+     4. `(canary height 24)`
+     5. `(canary32 is-instance-of canary)`
+
+### Instructions
+
+1. Read the contents of the input text file.
+2. Identify entities, properties, relationships, and instances described in the text.
+3. Convert the text into a NEO language knowledge base using the defined structure and rules.
+4. Ensure all symbols and constants adhere to NEO syntax, replacing spaces in symbols with hyphens (`-`).
+
+### Example Input
+Text:
+```
+A bird has a height of 32. A canary is a type of bird with a height of 24. There is an instance of a canary named canary32.
+```
+
+### Example Output (NEO Language)
+```
+(bird is-a prototype)
+(bird height 32)
+(canary is-a bird)
+(canary height 24)
+(canary32 is-instance-of canary)
+(이순신 birth-date 1545년-4월-28일 윤음력-3월-8일)
+(이순신 death-date 1598년-12월-16일 음력-11월-19일)
+(함경도 동구비보권관 조산보만호-겸-녹도둔전사의-1587년)
+```
+
+
+### Note
+- The generated output must consist only of NEO code without explanations or additional text, as it will be directly executed by the NEO compiler. Ensure that no comments or descriptive text is included in the generated result.

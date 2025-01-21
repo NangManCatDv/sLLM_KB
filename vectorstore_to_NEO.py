@@ -15,20 +15,20 @@ llm = OllamaLLM(
 # FIXME: 현재 디버그 중으로 vectorstore_path는 현재 쓰이지 않고 doc_txt_path만이 사용되고 있다.
 
 
-def convert_vectorstore_to_prolog(vectorstore_path, doc_txt_path, system_prompt_path):
-    """
-    벡터 저장소와 텍스트 파일 내용을 Prolog 형식으로 변환하여 prolog/facts.pl에 저장.
-    OllamaLLM 모델을 사용하여 변환 작업 수행.
+def convert_vectorstore_to_NEO(vectorstore_path, doc_txt_path, system_prompt_path):
+    # """
+    # 벡터 저장소와 텍스트 파일 내용을 NEO 형식으로 변환하여 NEO/facts.nkb에 저장.
+    # OllamaLLM 모델을 사용하여 변환 작업 수행.
 
-    Args:
-        vectorstore_path (str): 벡터 저장소 디렉토리 경로.
-        doc_txt_path (str): 입력 텍스트 파일 경로.
-        system_prompt_path (str): 시스템 프롬프트 텍스트 파일 경로.
+    # Args:
+    #     vectorstore_path (str): 벡터 저장소 디렉토리 경로.
+    #     doc_txt_path (str): 입력 텍스트 파일 경로.
+    #     system_prompt_path (str): 시스템 프롬프트 텍스트 파일 경로.
 
-    Returns:
-        None
-    """
-    logging.debug("Prolog 변환 시작...")
+    # Returns:
+    #     None
+    # """
+    logging.debug("NEO 변환 시작...")
 
     # 경로 확인
     if not os.path.exists(vectorstore_path):
@@ -49,26 +49,27 @@ def convert_vectorstore_to_prolog(vectorstore_path, doc_txt_path, system_prompt_
     with open(doc_txt_path, "r", encoding="utf-8") as file:
         doc_lines = file.readlines()
 
-    # 텍스트를 Prolog 형식으로 변환 (OllamaLLM 사용)
-    prolog_facts = []
+    # 텍스트를 NEO 형식으로 변환 (OllamaLLM 사용)
+    NEO_facts = []
     for line in doc_lines:
         line = line.strip()
         if line:  # 빈 줄 건너뜀
-            # OllamaLLM을 사용하여 Prolog 형식으로 변환
-            prompt = f"{system_prompt}\n\nConvert the following text to a Prolog fact:\n\n{line}"
+            prompt = f"{system_prompt}\n\nConvert the following text to a NEO fact:\n\n{line}"
             fact = llm(prompt).strip()
-            prolog_facts.append(fact)
 
-    # Prolog 파일 저장 경로 설정
-    output_prolog_path = "prolog/facts.pl"
-    os.makedirs(os.path.dirname(output_prolog_path), exist_ok=True)
+            # ```로 시작하거나 끝나는 텍스트 제거
+            fact = fact.replace("```", "").strip()
+            NEO_facts.append(fact)
 
-    # Prolog 파일 쓰기
-    with open(output_prolog_path, "w", encoding="utf-8") as file:
-        # 시스템 프롬프트를 주석으로 추가
-        file.write(f"% {system_prompt}\n\n")
-        for fact in prolog_facts:
+    # NEO 파일 저장 경로 설정
+    output_NEO_path = "NEO/facts.nkb"
+    os.makedirs(os.path.dirname(output_NEO_path), exist_ok=True)
+
+    # NEO 파일 쓰기
+    with open(output_NEO_path, "w", encoding="utf-8") as file:
+        # 시스템 프롬프트 주석 추가 코드 제거
+        for fact in NEO_facts:
             file.write(f"{fact}\n")
 
-    logging.debug(f"Prolog 파일 생성 완료: {output_prolog_path}")
-    print(f"Prolog 파일이 생성되었습니다: {output_prolog_path}")
+    logging.debug(f"NEO 파일 생성 완료: {output_NEO_path}")
+    print(f"NEO 파일이 생성되었습니다: {output_NEO_path}")

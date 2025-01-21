@@ -1,6 +1,6 @@
 import logging
 import os
-from langchain_community.document_loaders import PyMuPDFLoader
+from langchain.document_loaders import PyMuPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
@@ -15,7 +15,7 @@ def vectorstore_main():
     logging.debug("vectorstore 확인 중...")
 
     # PDF 경로
-    pdf_path = "doc/doc2.pdf"
+    pdf_path = "doc/이순신.pdf"
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"PDF 파일 {pdf_path}을 찾을 수 없습니다.")
 
