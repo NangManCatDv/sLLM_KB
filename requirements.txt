@@ -5,3 +5,5 @@ langchain-ollama
 pyswip
 pymupdf
 chromadb
+
+konlpy

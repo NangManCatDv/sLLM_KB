@@ -1,5 +1,5 @@
 from vectorstore import vectorstore_main
-from vectorstore_to_prolog import convert_vectorstore_to_prolog
+from vectorstore_to_prolog import convert_text_to_prolog
 from vectorstore_to_NEO import convert_vectorstore_to_NEO
 from query_to_prolog import convert_question_to_prolog_llm
 from prolog_executor import natural_language_to_prolog_query, execute_prolog_query
@@ -19,19 +19,19 @@ logging.basicConfig(
 # Vectorstore 실행
 vectorstore_main()  # vectorstore.py의 주요 작업 실행
 
-# # vectorestore를 prolog 언어로 변경(convert_vectorstore_to_NEO 사용시 비활성화 할 것)
-# convert_vectorstore_to_prolog(
+# vectorestore를 prolog 언어로 변경(convert_vectorstore_to_NEO 사용시 비활성화 할 것)
+convert_text_to_prolog(
+    # vectorstore_path="vectorstore",  # 벡터 저장소 디렉토리
+    doc_txt_path="doc/doc.txt",  # doc.txt 파일 경로
+    system_prompt_path="system_prompt1.txt",  # system_prompt1.txt 파일 경로
+)
+
+# # vectorstore를 NEO 언어로 변경(convert_vectorstore_to_NEO 사용시 비활성화 할 것)
+# convert_vectorstore_to_NEO(
 #     vectorstore_path="vectorstore",  # 벡터 저장소 디렉토리
 #     doc_txt_path="doc/doc.txt",  # doc.txt 파일 경로
-#     system_prompt_path="system_prompt1.txt",  # system_prompt1.txt 파일 경로
+#     system_prompt_path="system_prompt2.txt",  # system_prompt2.txt 파일 경로
 # )
-
-# vectorstore를 NEO 언어로 변경(convert_vectorstore_to_NEO 사용시 비활성화 할 것)
-convert_vectorstore_to_NEO(
-    vectorstore_path="vectorstore",  # 벡터 저장소 디렉토리
-    doc_txt_path="doc/doc.txt",  # doc.txt 파일 경로
-    system_prompt_path="system_prompt2.txt",  # system_prompt2.txt 파일 경로
-)
 
 
 if __name__ == "__main__":
