@@ -60,7 +60,7 @@ def convert_vectorstore_to_NEO(vectorstore_path, doc_txt_path, system_prompt_pat
             # ```로 시작하거나 끝나는 텍스트 제거
             fact = fact.replace("```", "").strip()
             NEO_facts.append(fact)
-
+ 
     # NEO 파일 저장 경로 설정
     output_NEO_path = "NEO/facts.nkb"
     os.makedirs(os.path.dirname(output_NEO_path), exist_ok=True)
